@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true">
+
+    <data>
+        <variable
+            name="ad"
+            type="com.lashawn.dtappiaads.models.Ad" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@{ad.productDescription}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_productName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@{ad.productName}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:tooltipText="Product Name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/iv_thumbnail"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_productRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@+id/iv_thumbnail"
+            android:text="@{ad.rating}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@+id/iv_thumbnail"
+            app:layout_constraintTop_toBottomOf="@+id/tv_productName" />
+
+        <ImageView
+            android:id="@+id/iv_rating"
+            android:layout_width="56dp"
+            android:layout_height="11dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@+id/tv_productRating"
+            android:contentDescription="@{ad.rating}"
+            app:layout_constraintStart_toEndOf="@+id/tv_productRating"
+            app:layout_constraintTop_toBottomOf="@id/tv_productName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

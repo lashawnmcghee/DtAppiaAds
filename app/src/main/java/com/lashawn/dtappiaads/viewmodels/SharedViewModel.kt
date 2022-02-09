@@ -18,7 +18,6 @@ class SharedViewModel : ViewModel() {
     private val _ad = MutableLiveData<Ad>()
     val ad: LiveData<Ad> = _ad
 
-
     fun provideAd(updatedValue: Ad) {
         _ad.value = updatedValue
     }

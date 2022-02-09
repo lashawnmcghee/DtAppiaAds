@@ -6,10 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.lashawn.dtappiaads.common.Constants.DETAIL_TAG
 import com.lashawn.dtappiaads.common.Constants.LIST_TAG
-import com.lashawn.dtappiaads.models.Ad
 import com.lashawn.dtappiaads.viewmodels.SharedViewModel
 import com.lashawn.dtappiaads.views.AdDetailFragment
 import com.lashawn.dtappiaads.views.AdListFragment
+import com.lashawn.dtappiaads.views.SplashFragment
+import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -20,9 +21,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        showAdList()
-
         lifecycleScope.launchWhenStarted {
+            showSplash()
+            delay(2000)
+            showAdList()
             sharedViewModel.ad.observe(this@MainActivity) {
                 if(it.appId == null) {
                     showAdList()
@@ -42,6 +44,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun showSplash() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.flFragmentHolder, SplashFragment())
+            .commit()
+    }
+
     private fun showAdList() {
         val listFrag: Fragment? = supportFragmentManager.findFragmentByTag(LIST_TAG)
 
@@ -53,15 +62,12 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         } else {
             supportFragmentManager.beginTransaction()
-                .add(R.id.flFragmentHolder, AdListFragment(), LIST_TAG)
+                .replace(R.id.flFragmentHolder, AdListFragment(), LIST_TAG)
                 .commit()
         }
     }
 
     private fun showAdDetail() {
-//        supportFragmentManager.beginTransaction()
-//            .addToBackStack(null)
-//            .replace(R.id.flFragmentHolder, AdDetailFragment()).commit()
         val listFrag: Fragment? = supportFragmentManager.findFragmentByTag(LIST_TAG)
         val detailFrag: Fragment? = supportFragmentManager.findFragmentByTag(DETAIL_TAG)
 

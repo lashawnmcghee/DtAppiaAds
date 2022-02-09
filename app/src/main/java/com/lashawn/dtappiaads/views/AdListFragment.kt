@@ -6,22 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.lashawn.dtappiaads.views.adapters.DataBindingRecyclerAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.lashawn.dtappiaads.databinding.AdListFragmentBinding
 import com.lashawn.dtappiaads.models.Ad
 import com.lashawn.dtappiaads.viewmodels.AdListViewModel
 import com.lashawn.dtappiaads.viewmodels.SharedViewModel
+import com.lashawn.dtappiaads.views.adapters.DataBindingRecyclerAdapter
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AdListFragment : Fragment() {
     companion object {
         fun newInstance() = AdListFragment()
     }
 
-    private var lastHash:Int = 0
     private lateinit var adapter: DataBindingRecyclerAdapter
-    private val viewModel: AdListViewModel by viewModel()
+    private val viewModel: AdListViewModel by inject()
     private val sharedViewModel: SharedViewModel by sharedViewModel()
 
     private var _binding: AdListFragmentBinding? = null
@@ -33,28 +33,46 @@ class AdListFragment : Fragment() {
     ): View? {
         _binding = AdListFragmentBinding.inflate(inflater, container, false)
 
+        lifecycleScope.launchWhenStarted {
+            setupViewItems()
+            subscribeToObservables()
+        }
+
+
+        return binding.root
+    }
+
+    /**
+     * Set up view items.
+     * Note: This method must be run before subscribing to observables.
+     */
+    private fun setupViewItems() {
         val onAdClicked: (clickedAd: Ad) -> Unit = { clickedAd ->
             sharedViewModel.provideAd(clickedAd)
         }
-
         adapter = DataBindingRecyclerAdapter(onAdClicked)
         binding.rvAds.adapter = adapter
 
-        lifecycleScope.launchWhenStarted {
-            viewModel.ads.observe(viewLifecycleOwner) {
-                val newHash = it.hashCode()
-                if (lastHash != newHash) {
-                    adapter.setAdsList(it)
-                    lastHash = newHash
-                }
-            }
+        binding.swpRefresh.setOnRefreshListener {
+            viewModel.refreshAds()
+            binding.swpRefresh.isRefreshing = false
+        }
+    }
 
-            binding.swpRefresh.setOnRefreshListener {
-                viewModel.refreshAds()
-                binding.swpRefresh.isRefreshing = false
-            }
+    /**
+     * You must set up your view items before running this method
+     */
+    private fun subscribeToObservables() {
+        viewModel.ads.observe(viewLifecycleOwner) {
+            adapter.setAdsList(it)
         }
 
-        return binding.root
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            Snackbar.make(
+                binding.root,
+                it,
+                Snackbar.LENGTH_SHORT
+            ).show()
+        }
     }
 }

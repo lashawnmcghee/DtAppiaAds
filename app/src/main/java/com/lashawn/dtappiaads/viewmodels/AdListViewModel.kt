@@ -19,11 +19,14 @@ import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 
-
 class AdListViewModel: ViewModel() {
-
+    private val TAG: String = AdListViewModel::class.java.simpleName
     private val repository: AdRepositoryImpl by inject(AdRepositoryImpl::class.java)
+    private val _errorMessage = MutableLiveData<String>()
     private val _ads = MutableLiveData<List<Ad>>()
+
+    //Observables
+    val errorMessage: LiveData<String> = _errorMessage
     val ads: LiveData<List<Ad>> = _ads
 
     @Volatile var fetching: Boolean = false
@@ -36,45 +39,46 @@ class AdListViewModel: ViewModel() {
         if (!fetching) getAds()
     }
 
-    private fun provideAds(value: List<Ad>) {
+    private fun parseAdsFromXml(responseXml: String) {
+        if (responseXml.isEmpty()) return
+
         viewModelScope.launch {
-            _ads.value = value
+            var trimmed = responseXml
+            val mapper by inject<XmlMapper>(XmlMapper::class.java)
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+            val startIdx = trimmed.indexOf(starttag)
+            val endIdx = trimmed.lastIndexOf(endtag) + endtag.length
+            if (startIdx != -1 ) {
+                trimmed = opentag + trimmed.substring(startIdx, endIdx) + closetag
+            }
+
+            try {
+                val adList: Array<Ad> = mapper.readValue(trimmed, Array<Ad>::class.java)
+                _ads.value = adList.asList()
+                Log.d("DTXml", "Ad xml successfully converted: $adList")
+            } catch (ex: Exception) {
+                Log.e(TAG, "" + ex.message)
+            }
         }
     }
 
     private fun getAds() {
         fetching = true
         viewModelScope.launch {
-
             val nodes = repository.fetchAds()
 
             nodes.enqueue(object: retrofit2.Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
-                    var trimmed = response.body()
-                    if (trimmed == null || trimmed.isEmpty()) return
-
-                    Log.d("DTResponse", "" + trimmed)
-
-                    val mapper by inject<XmlMapper>(XmlMapper::class.java)
-                    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-                    val startIdx = trimmed.indexOf(starttag)
-                    val endIdx = trimmed.lastIndexOf(endtag) + endtag.length
-                    if (startIdx != -1 ) {
-                        trimmed = opentag + trimmed.substring(startIdx, endIdx) + closetag
-                    }
-
-                    val adList: Array<Ad> = mapper.readValue(trimmed, Array<Ad>::class.java)
-
-                    Log.d("DTXml", "Ad xml successfully converted: $adList")
-
-                    provideAds(adList.asList())
-
+                    val webResponse = response.body()
+                    parseAdsFromXml(webResponse!!)
+                    Log.d(TAG, "Web call SUCCESS: $webResponse")
                     fetching = false
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.e("DTFailure", "" + t.message)
+                    _errorMessage.value = t.message
+                    Log.e(TAG, "Web call FAILURE: " + t.message)
                     fetching = false
                 }
             })

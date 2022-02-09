@@ -7,7 +7,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 
-
+/**
+ * Simple client object which creates and exposes a Retrofit
+ * API service for use by repositories.
+ */
 object ApiClient {
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()

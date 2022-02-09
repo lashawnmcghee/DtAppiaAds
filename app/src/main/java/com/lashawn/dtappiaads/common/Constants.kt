@@ -13,4 +13,8 @@ object Constants {
 
     const val starttag = "<ad>"
     const val endtag = "</ad>"
+
+    //Fragment Tags
+    const val LIST_TAG = "AdList"
+    const val DETAIL_TAG = "AdDetail"
 }

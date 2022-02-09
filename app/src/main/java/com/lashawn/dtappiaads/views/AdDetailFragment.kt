@@ -36,7 +36,8 @@ class AdDetailFragment : Fragment() {
 
                 binding.ivProductPhoto.load(it.productThumbnail) {
                     crossfade(true)
-                    placeholder(R.drawable.ic_launcher_foreground)
+                    placeholder(R.drawable.ic_baseline_cloud_download_24)
+                    error(R.drawable.ic_baseline_error_outline_24)
                     transformations(RoundedCornersTransformation(10f))
                 }
             }

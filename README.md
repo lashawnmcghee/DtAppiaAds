@@ -3,7 +3,7 @@
 Though this app currently works.
 Code quality file are being generated.
 
-## Ad List" 
+## Ad List
 
 This app grabs a scrolling list of products with
 a thumbnail, name, rating and overall average rating.

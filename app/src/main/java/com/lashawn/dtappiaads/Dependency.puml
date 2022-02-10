@@ -1,0 +1,50 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+object Constants
+
+package "Model" #FFFFFF {
+    class Ad {
+    DATA_CLASS
+    }
+}
+
+package "View" #FFFFFF {
+package "Activity" #FFFFFF {
+class MainActivity
+}
+package "Fragments" #FFFFFF {
+MainActivity --* SplashFragment
+MainActivity --* AdListFragment
+MainActivity --* AdDetailFragment
+class SplashFragment
+class AdListFragment
+class AdDetailFragment
+}
+}
+
+package "ViewModel" #FFFFFF {
+MainActivity --* SharedViewModel
+AdDetailFragment --* SharedViewModel
+AdListFragment --* AdListViewModel
+class SharedViewModel
+class AdListViewModel
+SharedViewModel --* Ad
+AdListViewModel --* Ad
+}
+
+package "Networking" #FFFFFF {
+    interface ApiService
+    object ApiClient
+    ApiService *-- ApiClient
+    interface IAdRepository
+    class AdRepositoryImpl
+    AdRepositoryImpl <|-- IAdRepository
+    AdRepositoryImpl --* ApiClient
+     AdListViewModel --* IAdRepository
+}
+
+
+
+
+@enduml

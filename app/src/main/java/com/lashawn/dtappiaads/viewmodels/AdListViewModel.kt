@@ -55,7 +55,7 @@ class AdListViewModel: ViewModel() {
 
             try {
                 val adList: Array<Ad> = mapper.readValue(trimmed, Array<Ad>::class.java)
-                _ads.value = adList.asList()
+                _ads.postValue(adList.asList())
                 Log.d("DTXml", "Ad xml successfully converted: $adList")
             } catch (ex: Exception) {
                 Log.e(TAG, "" + ex.message)
@@ -77,7 +77,7 @@ class AdListViewModel: ViewModel() {
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    _errorMessage.value = t.message
+                    _errorMessage.postValue(t.message)
                     Log.e(TAG, "Web call FAILURE: " + t.message)
                     fetching = false
                 }

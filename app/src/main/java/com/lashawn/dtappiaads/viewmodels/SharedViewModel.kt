@@ -19,10 +19,10 @@ class SharedViewModel : ViewModel() {
     val ad: LiveData<Ad> = _ad
 
     fun provideAd(updatedValue: Ad) {
-        _ad.value = updatedValue
+        _ad.postValue(updatedValue)
     }
 
     fun clearAd() {
-        _ad.value = emptyAd
+        _ad.postValue(emptyAd)
     }
 }

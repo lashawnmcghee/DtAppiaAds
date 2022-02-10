@@ -17,5 +17,5 @@ scrolling list.
 To refresh the list, the user may pull down from the top of the list.
 The list is currently limited to 10 items.
 
-[[/DependencyUML.png]]
+![MY UML](https://github.com/lashawnmcghee/DtAppiaAds/blob/main/DependencyUML.png)
 

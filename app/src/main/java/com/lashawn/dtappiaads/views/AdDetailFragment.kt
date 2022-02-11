@@ -1,6 +1,7 @@
 package com.lashawn.dtappiaads.views
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,6 +42,7 @@ class AdDetailFragment : Fragment() {
                     transformations(RoundedCornersTransformation(10f))
                 }
             }
+            Log.d(tag, "Ad details now showing.")
         }
 
          return binding.root

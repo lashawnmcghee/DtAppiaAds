@@ -1,6 +1,7 @@
 package com.lashawn.dtappiaads.views
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,8 +37,8 @@ class AdListFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             setupViewItems()
             subscribeToObservables()
+            Log.d(tag, "Ad list prepared and observing for updates.")
         }
-
 
         return binding.root
     }

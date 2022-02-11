@@ -1,6 +1,7 @@
 package com.lashawn.dtappiaads.views
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ class SplashFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d(tag, "Splash screen showing.")
         return inflater.inflate(R.layout.splash_fragment, container, false)
     }
 }

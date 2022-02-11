@@ -1,6 +1,7 @@
 package com.lashawn.dtappiaads
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +14,11 @@ import com.lashawn.dtappiaads.views.SplashFragment
 import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/**
+ * This is the one and only activity which controls fragments as different screens.
+ */
 class MainActivity : AppCompatActivity() {
+    private val TAG = MainActivity::class.simpleName
     private val sharedViewModel: SharedViewModel by viewModel()
     private var backCount = 1
 
@@ -28,9 +33,11 @@ class MainActivity : AppCompatActivity() {
             sharedViewModel.ad.observe(this@MainActivity) {
                 if(it.appId == null) {
                     showAdList()
+                    Log.d(TAG, "Now Displaying List Fragment. ($backCount)")
                 } else {
                     showAdDetail()
                     backCount++
+                    Log.d(TAG, "Now Displaying Detail Fragment. ($backCount)")
                 }
             }
         }
@@ -39,8 +46,10 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if(--backCount > 0) {
             sharedViewModel.clearAd()
+            Log.d(TAG, "Now clearing detail Ad. ($backCount)")
         } else {
             super.onBackPressed()
+            Log.d(TAG, "Now exiting Main. ($backCount)")
         }
     }
 

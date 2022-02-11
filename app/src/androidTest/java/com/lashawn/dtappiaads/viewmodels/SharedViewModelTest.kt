@@ -1,19 +1,30 @@
 package com.lashawn.dtappiaads.viewmodels
 
-import android.content.Context
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
+import com.lashawn.dtappiaads.getOrAwaitValue
 import com.lashawn.dtappiaads.models.Ad
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
 class SharedViewModelTest {
-    private val instrumentationContext: Context = InstrumentationRegistry.getInstrumentation().context
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    private lateinit var sut: SharedViewModel
 
     @Before
     fun setUp() {
+        sut = SharedViewModel()
     }
 
     @After
@@ -22,31 +33,19 @@ class SharedViewModelTest {
 
     //test that we get an empty add when we clear add
     @Test
-    fun testWeGetAnEmptyAddWhenWeClearAdd() {
-        val sut = SharedViewModel()
-        val empty = Ad()
+    fun testWeGetAlertAndEmptyAdWhenWeClearAd() = runTest {
+        val emptyAd = Ad()
         sut.clearAd()
-        assertThat(empty).isEqualTo(sut.ad.value)
+        val result = sut.ad.getOrAwaitValue()
+        assertThat(emptyAd).isEqualTo(result)
     }
 
-//    //test that we get the same ad we pass in to provideAd
-//    @Test
-//    fun testWeGetSameAdWePassInProvideAd() {
-//        val sut = SharedViewModel()
-//        val compareAd = Ad(productName = "TestAd")
-//        sut.provideAd(compareAd)
-//        assertThat(compareAd).isEqualTo(sut.ad.value)
-//    }
-//
-//    //test that we are alerted when we provideAd
-//    @Test
-//    fun testWeGetAlertedWhenWeProvideAd() {
-//        //TODO: Implement
-//    }
-//
-//    //test that we are alerted when we provideAd and get back same Ad
-//    @Test
-//    fun testWeGetAlertedWithSameAdWhenWeProvideAd() {
-//        //TODO: Implement
-//    }
+    //test that we get the same ad we pass in to provideAd
+    @Test
+    fun testWeGetAlertAndSameAdWePassInProvideAd() = runTest {
+        val compareAd = Ad(productName = "TestAd")
+        sut.provideAd(compareAd)
+        val result = sut.ad.getOrAwaitValue()
+        assertThat(compareAd).isEqualTo(result)
+    }
 }

@@ -59,6 +59,7 @@ class AdListViewModel: ViewModel() {
                 Log.d("DTXml", "Ad xml successfully converted: $adList")
             } catch (ex: Exception) {
                 Log.e(TAG, "" + ex.message)
+                _errorMessage.postValue(ex.message)
             }
         }
     }

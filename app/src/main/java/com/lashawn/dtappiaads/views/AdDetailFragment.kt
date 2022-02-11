@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import coil.load
+import coil.size.Precision
+import coil.size.Scale
 import coil.transform.RoundedCornersTransformation
 import com.lashawn.dtappiaads.R
 import com.lashawn.dtappiaads.databinding.AdDetailFragmentBinding
@@ -40,6 +42,15 @@ class AdDetailFragment : Fragment() {
                     placeholder(R.drawable.ic_baseline_cloud_download_24)
                     error(R.drawable.ic_baseline_error_outline_24)
                     transformations(RoundedCornersTransformation(10f))
+                }
+
+                binding.ivRating.load(it.averageRatingImageURL) {
+                    crossfade(true)
+                    placeholder(R.drawable.ic_baseline_cloud_download_24)
+                    error(R.drawable.ic_baseline_error_outline_24)
+                    transformations(RoundedCornersTransformation(10f))
+                    precision(Precision.EXACT)
+                    scale(Scale.FILL)
                 }
             }
             Log.d(tag, "Ad details now showing.")

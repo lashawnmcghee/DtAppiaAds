@@ -21,13 +21,22 @@
             android:contentDescription="@{ad.productDescription}"
             android:layout_centerHorizontal="true"/>
 
+        <ImageView
+            android:id="@+id/iv_rating"
+            android:layout_margin="10dp"
+            android:layout_width="112dp"
+            android:layout_height="22dp"
+            android:contentDescription="@{ad.productDescription}"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/iv_ProductPhoto"/>
+
         <ScrollView
             android:id="@+id/sv_scroller"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
             android:scrollbars="vertical"
-            android:layout_below="@id/iv_ProductPhoto">
+            android:layout_below="@id/iv_rating">
 
         <TextView
             android:id="@+id/tv_Info"

@@ -6,7 +6,6 @@ import com.google.common.truth.Truth.assertThat
 import com.lashawn.dtappiaads.getOrAwaitValue
 import com.lashawn.dtappiaads.models.Ad
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before

@@ -29,7 +29,7 @@ class AdListViewModel: ViewModel() {
     val errorMessage: LiveData<String> = _errorMessage
     val ads: LiveData<List<Ad>> = _ads
 
-    @Volatile var fetching: Boolean = false
+    @Volatile private var fetching: Boolean = false
 
     init {
         getAds()

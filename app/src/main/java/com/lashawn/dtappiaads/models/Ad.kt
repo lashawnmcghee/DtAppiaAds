@@ -3,7 +3,10 @@ package com.lashawn.dtappiaads.models
 import com.fasterxml.jackson.annotation.JsonIgnore
 
 data class Ad(
+    val appId: String? = null,
     val averageRatingImageURL: String? = null,
+    val bidRate: String? = null,
+    val billingTypeId: String? = null,
     val useInstallerBroadcast: String? = null,
     @JsonIgnore
     val metadata: Any? = null,
@@ -13,14 +16,12 @@ data class Ad(
     val numberOfDownloads: String? = null,
     val tstiEligible: String? = null,
     val rating: String? = null,
-    val bidRate: String? = null,
     val categoryName: String? = null,
     val creativeId: String? = null,
     val minOSVersion: String? = null,
     val productName: String? = null,
     val callToAction: String? = null,
     val campaignDisplayOrder: String? = null,
-    val appId: String? = null,
     val numberOfRatings: String? = null,
     val campaignTypeId: String? = null,
     val stiEnabled: String? = null,
@@ -35,7 +36,6 @@ data class Ad(
     val homeScreen: String? = null,
     val impressionTrackingURL: String? = null,
     val postInstallActions: String? = null,
-    val billingTypeId: String? = null,
     val productThumbnail: String? = null,
     val s2s: String? = null) {
 

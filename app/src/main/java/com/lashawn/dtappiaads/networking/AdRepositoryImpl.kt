@@ -1,5 +1,6 @@
 package com.lashawn.dtappiaads.networking
 
+import com.lashawn.dtappiaads.models.Ads
 import retrofit2.Call
 
 /**
@@ -7,7 +8,7 @@ import retrofit2.Call
  * Please add through Interface IAdRepository.
  */
 class AdRepositoryImpl: IAdRepository {
-    override suspend fun fetchAds(): Call<String> {
+    override suspend fun fetchAds(): Call<Ads> {
         return ApiClient.apiService.fetchAds()
     }
 }

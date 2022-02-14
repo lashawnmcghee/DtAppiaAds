@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.lashawn.dtappiaads.models.Ad
 import com.lashawn.dtappiaads.models.Ads
 import com.lashawn.dtappiaads.networking.AdRepositoryImpl
@@ -35,38 +33,20 @@ class AdListViewModel: ViewModel() {
         if (!fetching) getAds()
     }
 
-    private fun parseAdsFromXml(responseXml: String) {
-        if (responseXml.isEmpty()) return
-
-        viewModelScope.launch {
-            val mapper by inject<XmlMapper>(XmlMapper::class.java)
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-            try {
-                val adList: Ads = mapper.readValue(responseXml, Ads::class.java)
-                _ads.postValue(adList.ads)
-                Log.d("DTXml", "Ad xml successfully converted: $adList")
-            } catch (ex: Exception) {
-                Log.e(TAG, "" + ex.message)
-                _errorMessage.postValue(ex.message)
-            }
-        }
-    }
-
     private fun getAds() {
         fetching = true
         viewModelScope.launch {
             val nodes = repository.fetchAds()
 
-            nodes.enqueue(object: retrofit2.Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
+            nodes.enqueue(object: retrofit2.Callback<Ads> {
+                override fun onResponse(call: Call<Ads>, response: Response<Ads>) {
                     val webResponse = response.body()
-                    parseAdsFromXml(webResponse!!)
+                    _ads.postValue(webResponse?.ads)
                     Log.d(TAG, "Web call SUCCESS: $webResponse")
                     fetching = false
                 }
 
-                override fun onFailure(call: Call<String>, t: Throwable) {
+                override fun onFailure(call: Call<Ads>, t: Throwable) {
                     _errorMessage.postValue(t.message)
                     Log.e(TAG, "Web call FAILURE: " + t.message)
                     fetching = false

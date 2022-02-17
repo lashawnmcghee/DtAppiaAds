@@ -41,7 +41,7 @@ package "Networking" #FFFFFF {
     class AdRepositoryImpl
     AdRepositoryImpl <|-- IAdRepository
     AdRepositoryImpl --* ApiClient
-     AdListViewModel --* IAdRepository
+    AdListViewModel --* IAdRepository
 }
 
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lashawn.dtappiaads.models.Ad
 import com.lashawn.dtappiaads.models.Ads
+import com.lashawn.dtappiaads.models.AdsRequest
 import com.lashawn.dtappiaads.networking.AdRepositoryImpl
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
@@ -16,42 +17,23 @@ import retrofit2.Response
 class AdListViewModel: ViewModel() {
     private val TAG: String = AdListViewModel::class.java.simpleName
     private val repository: AdRepositoryImpl by inject(AdRepositoryImpl::class.java)
-    private val _errorMessage = MutableLiveData<String>()
-    private val _ads = MutableLiveData<List<Ad>>()
+    private val _adsRequest: AdsRequest by inject(AdsRequest::class.java)
 
     //Observables
-    val errorMessage: LiveData<String> = _errorMessage
-    val ads: LiveData<List<Ad>> = _ads
-
-    @Volatile private var fetching: Boolean = false
+    val errorMessage: LiveData<String> = _adsRequest.error
+    val ads: LiveData<List<Ad>> = _adsRequest.ads
 
     init {
         getAds()
     }
 
     fun refreshAds() {
-        if (!fetching) getAds()
+        getAds()
     }
 
     private fun getAds() {
-        fetching = true
         viewModelScope.launch {
-            val nodes = repository.fetchAds()
-
-            nodes.enqueue(object: retrofit2.Callback<Ads> {
-                override fun onResponse(call: Call<Ads>, response: Response<Ads>) {
-                    val webResponse = response.body()
-                    _ads.postValue(webResponse?.ads)
-                    Log.d(TAG, "Web call SUCCESS: $webResponse")
-                    fetching = false
-                }
-
-                override fun onFailure(call: Call<Ads>, t: Throwable) {
-                    _errorMessage.postValue(t.message)
-                    Log.e(TAG, "Web call FAILURE: " + t.message)
-                    fetching = false
-                }
-            })
+            repository.fetchAds(_adsRequest)
         }
     }
 }

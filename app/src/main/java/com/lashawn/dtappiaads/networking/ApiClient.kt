@@ -16,6 +16,7 @@ import retrofit2.http.GET
  * API service for use by repositories.
  */
 object ApiClient {
+    //TODO: Add Injection for service
     private val retrofit: Retrofit by lazy {
         val mapper by KoinJavaComponent.inject<XmlMapper>(XmlMapper::class.java)
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
